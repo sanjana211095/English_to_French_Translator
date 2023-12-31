@@ -21,12 +21,24 @@ def load_data(path):
 english_sentences = load_data(english_data)
 french_sentences = load_data(french_data)
 
-def logits_to_text(logits,tokenizer):
-    index_to_words = {id: word for word, id in tokenizer.word_index.items()}
+# def logits_to_text(logits,tokenizer):
+#     index_to_words = {id: word for word, id in tokenizer.word_index.items()}
 
+#     index_to_words[0] = '<PAD>'
+
+#     return ' '.join([index_to_words[prediction] for prediction in np.argmax(logits,1)])
+def logits_to_text(logits, tokenizer):
+    index_to_words = {id: word for word, id in tokenizer.word_index.items()}
     index_to_words[0] = '<PAD>'
 
-    return ' '.join([index_to_words[prediction] for prediction in np.argmax(logits,1)])
+    translated_words = []
+    for prediction in np.argmax(logits, axis=1):
+        word = index_to_words.get(prediction, None)
+        if word is not None:
+            translated_words.append(word)
+
+    return ' '.join(translated_words)
+
 
 
 def tokenize(x):
